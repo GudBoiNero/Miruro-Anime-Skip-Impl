@@ -175,9 +175,12 @@ async function fetchFromProxy(url: string, cache: any, cacheKey: string) {
     }
 
     // Adjust request parameters based on PROXY_URL's availability
-    const requestConfig = PROXY_URL
-      ? { params: { url } } // If PROXY_URL is defined, send the original URL as a parameter
-      : {}; // If PROXY_URL is not defined, make a direct request
+    const requestConfig = {
+      headers: {
+        'X-Client-Id': import.meta.env.VITE_ANIME_SKIP_CLIENT_ID, // Add your custom header here
+      },
+      ...(PROXY_URL ? { params: { url } } : {}), // If PROXY_URL is defined, send the original URL as a parameter
+    };
 
     // Proceed with the network request
     const response = await axiosInstance.get(PROXY_URL ? '' : url, requestConfig);
